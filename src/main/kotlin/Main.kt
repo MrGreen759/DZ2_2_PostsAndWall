@@ -4,29 +4,29 @@ fun main(args: Array<String>) {
     var newComment = Comment(1)
     var newLike = Like(1, true, false)
     var newPost = Post(comments = newComment, likes = newLike)
-    wallService.addPost(newPost)
-    wallService.printPosts()
+    WallService.addPost(newPost)
+    WallService.printPosts()
 
     // создаем пост 2
     newComment = Comment(10)
     newLike = Like(10, true, false)
     newPost = Post(comments = newComment, likes = newLike)
-    wallService.addPost(newPost)
-    wallService.printPosts()
+    WallService.addPost(newPost)
+    WallService.printPosts()
 
     // создаем пост 3
     newComment = Comment(20)
     newLike = Like(20, true, true)
     newPost = Post(comments = newComment, likes = newLike, views = 144)
-    wallService.addPost(newPost)
-    wallService.printPosts()
+    WallService.addPost(newPost)
+    WallService.printPosts()
 
     // обновляем пост 2 (меняем количество комментариев, лайков и просмотров)
     newComment = Comment(100)
     newLike = Like(30, userLikes = true)
     newPost = Post(2, comments = newComment, likes = newLike, views = 214)
-    if (!wallService.updatePost(newPost)) println("Пост не найден.")
-    wallService.printPosts()
+    if (!WallService.updatePost(newPost)) println("Пост не найден.")
+    WallService.printPosts()
 
 }
 
@@ -54,7 +54,7 @@ data class Like (
     val userLikes: Boolean
         )
 
-object wallService {
+object WallService {
     var posts = emptyArray<Post>()
     private var lastPostId: Int = 0
 
@@ -71,7 +71,8 @@ object wallService {
         println("\nОбновляем пост #${post.id}")
         for ((index) in posts.withIndex()) {
             if (posts[index].id == post.id) {
-                posts[index] = post.copy()
+                val old = posts[index]
+                posts[index] = post.copy(publicDate = old.publicDate, ownerId = old.ownerId)
                 return true
             }
         }
